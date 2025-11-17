@@ -1,6 +1,6 @@
 # Earthquake ELT Pipeline - Complete Project
 
-A production-ready ELT system that ingests earthquake events from the USGS Earthquake Catalog API and models them into a local analytics data warehouse with a star schema.
+A ELT system that ingests earthquake events from the USGS Earthquake Catalog API and models them into a local analytics data warehouse with a star schema.
 
 ## 🎯 Design Overview
 
@@ -11,7 +11,7 @@ A production-ready ELT system that ingests earthquake events from the USGS Earth
 │   USGS API      │
 │  (GeoJSON)      │
 └────────┬────────┘
-         │ Extract (Python - 80% focus)
+         │ Extract  
          ↓
 ┌─────────────────┐
 │   Raw Layer     │  ← Append-only JSONB storage
@@ -29,7 +29,7 @@ A production-ready ELT system that ingests earthquake events from the USGS Earth
 └─────────────────┘
 ```
 
-## 🚀 Quick Start (5 minutes)
+## 🚀 Quick Start 
 
 ### Prerequisites
 - Python 3.11+
@@ -38,7 +38,7 @@ A production-ready ELT system that ingests earthquake events from the USGS Earth
 
 ### Setup & Run
 
-# Make sure .env file has DB_PASSWORD defined 
+#### Make sure .env file has DB_PASSWORD defined - you can define your own
 
 ```bash
 # 1. Complete setup (installs deps, starts DB, initializes schema)
@@ -74,6 +74,10 @@ PIPELINE SUMMARY
 ================================================================================
 Status: success
 
+Data Period:
+  - Start Date: 2025-11-10
+  - End Date: 2025-11-17
+  
 Ingestion:
   - Events fetched: 1247
   - Events valid: 1245
@@ -130,7 +134,7 @@ More queries in `sql/analytics/sample_queries.sql`
 ### Basic Commands
 
 ```bash
-make setup      # Initial setup
+make       # Initial setup
 make run        # Run full pipeline
 make ingest     # Ingestion only
 make transform  # Transformations only
@@ -239,7 +243,7 @@ All SQL files are in `sql/` directory with clear organization.
 3. **Error Logging**: All failures captured
 4. **Duration Metrics**: Pipeline timing tracked
 
-**🔄 Production Monitoring (integration points documented):**
+**🔄 Monitoring (integration points documented):**
 ```python
 # Metrics to track:
 - API response time (p50, p95, p99)

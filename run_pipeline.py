@@ -42,6 +42,9 @@ def main():
             print("=" * 80 + "\n")
             stats = pipeline.run_full_pipeline(start_time, end_time)
 
+        # ========================================
+        # UPDATED SUMMARY SECTION - ADD DATE RANGE
+        # ========================================
         print("\n" + "=" * 80)
         print("PIPELINE SUMMARY")
         print("=" * 80)
@@ -49,6 +52,10 @@ def main():
 
         if 'ingestion' in stats:
             ing = stats['ingestion']
+            print(f"\nData Period:")
+            print(f"  - Start Date: {ing.get('start_time', 'N/A')[:10]}")  # Extract YYYY-MM-DD
+            print(f"  - End Date: {ing.get('end_time', 'N/A')[:10]}")
+
             print(f"\nIngestion:")
             print(f"  - Events fetched: {ing.get('events_fetched', 0)}")
             print(f"  - Events valid: {ing.get('events_valid', 0)}")
@@ -66,9 +73,14 @@ def main():
             print(f"  - Dim event type: {trans.get('dim_event_type', 0)}")
 
         if 'duration_seconds' in stats:
-            print(f"\nDuration: {stats['duration_seconds']:.2f} seconds")
+            print(f"\nExecution:")
+            print(f"  - Duration: {stats['duration_seconds']:.2f} seconds")
+            print(f"  - Completed at: {stats.get('completed_at', 'N/A')[:19]}")  # YYYY-MM-DD HH:MM:SS
+
         print("=" * 80 + "\n")
+
         return 0
+
     except Exception as e:
         print(f"\n❌ Pipeline failed: {str(e)}\n", file=sys.stderr)
         return 1
