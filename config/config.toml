@@ -1,0 +1,31 @@
+# ============================================================================
+# FILE: config/config.toml
+# ============================================================================
+[api]
+base_url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
+format = "geojson"
+timeout = 30
+max_retries = 3
+retry_backoff = 2.0
+rate_limit_per_minute = 60
+batch_size = 1000
+lookback_days = 7
+
+[database]
+host = "localhost"
+port = 5432
+database = "earthquake_db"
+user = "postgres"
+password = "${DB_PASSWORD}"
+pool_size = 5
+
+[ingestion]
+checkpoint_enabled = true
+max_errors_per_batch = 500
+log_level = "INFO"
+log_format = "json"
+
+[validation]
+required_fields = ["id", "properties.mag", "properties.time", "geometry.coordinates"]
+magnitude_range = [0.0, 10.0]
+depth_range = [-10.0, 800.0]
