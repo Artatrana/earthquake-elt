@@ -2,7 +2,7 @@
 # FILE: src/ingestion/error_handler.py
 # ============================================================================
 from typing import Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 import json
 
@@ -26,7 +26,7 @@ class ErrorHandler:
             'error_type': error_type,
             'error_message': error_message,
             'raw_data': json.dumps(raw_data),
-            'occurred_at': datetime.utcnow()
+            'occurred_at': datetime.now(timezone.utc)
         }
         try:
             with self.db.get_connection() as conn:

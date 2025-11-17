@@ -4,7 +4,7 @@
 
 import json
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Any
 import logging
 
@@ -34,7 +34,8 @@ class RawDataLoader:
         if not batch_id:
             batch_id = str(uuid.uuid4())
 
-        start_time = datetime.utcnow()
+        #start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
 
         try:
             # Prepare records for insertion
@@ -44,7 +45,7 @@ class RawDataLoader:
                     'batch_id': batch_id,
                     'event_id': event['id'],
                     'raw_data': json.dumps(event),
-                    'ingested_at': datetime.utcnow()
+                    'ingested_at': datetime.now(timezone.utc)
                 })
 
             # Bulk insert
@@ -54,7 +55,7 @@ class RawDataLoader:
             self._log_batch_metadata(
                 batch_id=batch_id,
                 start_time=start_time,
-                end_time=datetime.utcnow(),
+                end_time=datetime.now(timezone.utc),
                 records_fetched=len(events),
                 records_inserted=inserted,
                 status='success'
@@ -74,7 +75,7 @@ class RawDataLoader:
             self._log_batch_metadata(
                 batch_id=batch_id,
                 start_time=start_time,
-                end_time=datetime.utcnow(),
+                end_time=datetime.now(timezone.utc),
                 records_fetched=len(events),
                 records_inserted=0,
                 status='failed',

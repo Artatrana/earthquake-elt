@@ -3,7 +3,7 @@
 # ============================================================================
 import logging
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any
 import uuid
 
@@ -44,7 +44,8 @@ class EarthquakePipeline:
         logger.info(f"Starting ingestion (batch: {batch_id})")
         try:
             if not end_time:
-                end_time = datetime.utcnow()
+                #end_time = datetime.utcnow()
+                end_time = datetime.now(timezone.utc)
             if not start_time:
                 lookback = lookback_days or self.config['api']['lookback_days']
                 start_time = end_time - timedelta(days=lookback)
@@ -114,11 +115,13 @@ class EarthquakePipeline:
         logger.info("=" * 80)
         logger.info("Starting full pipeline execution")
         logger.info("=" * 80)
-        pipeline_start = datetime.utcnow()
+        #pipeline_start = datetime.utcnow()
+        pipeline_start = datetime.now(timezone.utc)
         try:
             ingestion_stats = self.run_ingestion(start_time, end_time)
             transform_stats = self.run_transformations()
-            pipeline_end = datetime.utcnow()
+            #pipeline_end = datetime.utcnow()
+            pipeline_end = datetime.now(timezone.utc)
             duration = (pipeline_end - pipeline_start).total_seconds()
             stats = {
                 'status': 'success',
