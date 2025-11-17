@@ -9,3 +9,6 @@ __pycache__/
 logs/*.log
 .vscode/
 .idea/
+htmlcov/*.*
+.DS_Store
+.coverage
