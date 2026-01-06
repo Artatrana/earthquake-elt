@@ -1,12 +1,13 @@
-# .pre-commit-config.yaml
+# .pre-commit-config.yaml # this is hook
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.295
+    rev: v0.14.10  # <-- update to latest version
     hooks:
       - id: ruff
-        args: ["--fix"]  # optional: auto-fix
+        args: ["--fix"]
 
   - repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: 25.12.0
     hooks:
       - id: black
+
