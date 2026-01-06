@@ -12,18 +12,26 @@ from src.pipeline import EarthquakePipeline
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Earthquake ELT Pipeline')
-    parser.add_argument('--days', type=int, default=7, help='Lookback days (default: 7)')
-    parser.add_argument('--start-date', type=str, help='Start date (YYYY-MM-DD)')
-    parser.add_argument('--end-date', type=str, help='End date (YYYY-MM-DD)')
-    parser.add_argument('--ingestion-only', action='store_true', help='Ingestion only')
-    parser.add_argument('--transform-only', action='store_true', help='Transformations only')
-    parser.add_argument('--config', type=str, default='config/config.toml', help='Config file')
+    parser = argparse.ArgumentParser(description="Earthquake ELT Pipeline")
+    parser.add_argument(
+        "--days", type=int, default=7, help="Lookback days (default: 7)"
+    )
+    parser.add_argument("--start-date", type=str, help="Start date (YYYY-MM-DD)")
+    parser.add_argument("--end-date", type=str, help="End date (YYYY-MM-DD)")
+    parser.add_argument("--ingestion-only", action="store_true", help="Ingestion only")
+    parser.add_argument(
+        "--transform-only", action="store_true", help="Transformations only"
+    )
+    parser.add_argument(
+        "--config", type=str, default="config/config.toml", help="Config file"
+    )
     args = parser.parse_args()
 
     pipeline = EarthquakePipeline(args.config)
-    start_time = datetime.strptime(args.start_date, '%Y-%m-%d') if args.start_date else None
-    end_time = datetime.strptime(args.end_date, '%Y-%m-%d') if args.end_date else None
+    start_time = (
+        datetime.strptime(args.start_date, "%Y-%m-%d") if args.start_date else None
+    )
+    end_time = datetime.strptime(args.end_date, "%Y-%m-%d") if args.end_date else None
 
     try:
         if args.ingestion_only:
@@ -50,21 +58,23 @@ def main():
         print("=" * 80)
         print(f"Status: {stats.get('status', 'unknown')}")
 
-        if 'ingestion' in stats:
-            ing = stats['ingestion']
-            print(f"\nData Period:")
-            print(f"  - Start Date: {ing.get('start_time', 'N/A')[:10]}")  # Extract YYYY-MM-DD
+        if "ingestion" in stats:
+            ing = stats["ingestion"]
+            print("\nData Period:")
+            print(
+                f"  - Start Date: {ing.get('start_time', 'N/A')[:10]}"
+            )  # Extract YYYY-MM-DD
             print(f"  - End Date: {ing.get('end_time', 'N/A')[:10]}")
 
-            print(f"\nIngestion:")
+            print("\nIngestion:")
             print(f"  - Events fetched: {ing.get('events_fetched', 0)}")
             print(f"  - Events valid: {ing.get('events_valid', 0)}")
             print(f"  - Events invalid: {ing.get('events_invalid', 0)}")
             print(f"  - Events loaded: {ing.get('events_loaded', 0)}")
 
-        if 'transformations' in stats:
-            trans = stats['transformations']
-            print(f"\nWarehouse Counts:")
+        if "transformations" in stats:
+            trans = stats["transformations"]
+            print("\nWarehouse Counts:")
             print(f"  - Raw events: {trans.get('raw_events', 0)}")
             print(f"  - Staging events: {trans.get('staging_events', 0)}")
             print(f"  - Fact events: {trans.get('fact_events', 0)}")
@@ -72,10 +82,12 @@ def main():
             print(f"  - Dim location: {trans.get('dim_location', 0)}")
             print(f"  - Dim event type: {trans.get('dim_event_type', 0)}")
 
-        if 'duration_seconds' in stats:
-            print(f"\nExecution:")
+        if "duration_seconds" in stats:
+            print("\nExecution:")
             print(f"  - Duration: {stats['duration_seconds']:.2f} seconds")
-            print(f"  - Completed at: {stats.get('completed_at', 'N/A')[:19]}")  # YYYY-MM-DD HH:MM:SS
+            print(
+                f"  - Completed at: {stats.get('completed_at', 'N/A')[:19]}"
+            )  # YYYY-MM-DD HH:MM:SS
 
         print("=" * 80 + "\n")
 
@@ -86,5 +98,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

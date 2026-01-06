@@ -1,0 +1,41 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "us6000abcd",
+    "mag": 5.6,
+    "magType": "mb",
+    "place": "100 km W of SomeCity, SomeCountry",
+    "time": 1689999999123,
+    "updated": 1690001234567,
+    "tz": -480,
+    "url": "https://…",
+    "status": "automatic",
+    "tsunami": 0,
+    "sig": 456,
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [ longitude, latitude, depth ]  // depth in kilometers (or meters per spec)
+  }
+}
+
+{
+  "type": "Feature",
+  "properties": {
+    "id": "us6000abcd",
+    "mag": 5.6,
+    "magType": "mb",
+    "place": "100 km W of SomeCity, SomeCountry",
+    "time": 1689999999123,
+    "updated": 1690001234567,
+    "tz": -480,
+    "url": "https://…",
+    "status": "automatic",
+    "tsunami": 0,
+    "sig": 456,
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [ longitude, latitude, depth ]  // depth in kilometers (or meters per spec)
+  }
+}

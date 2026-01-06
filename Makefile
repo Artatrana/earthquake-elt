@@ -17,14 +17,18 @@ setup:
 	@echo "Setting up environment..."
 	pip install -r requirements.txt
 	mkdir -p logs
-	cp .env.example .env
-	docker-compose up -d
+	[ -f .env ] || cp .env.example .env
+
+	@echo "Starting Docker containers..."
+	docker compose up -d
+
 	@echo "Waiting for database..."
 	sleep 10
+
 	@echo "Initializing schema..."
-	docker-compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/01_raw_layer.sql
-	docker-compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/02_staging_layer.sql
-	docker-compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/03_warehouse_layer.sql
+	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/01_raw_layer.sql
+	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/02_staging_layer.sql
+	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/03_warehouse_layer.sql
 	@echo "✓ Setup complete!"
 
 run:
@@ -40,7 +44,7 @@ test:
 	pytest tests/ -v
 
 query:
-	docker-compose exec -T postgres psql -U postgres -d earthquake_db < sql/analytics/sample_queries.sql
+	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/analytics/sample_queries.sql
 
 clean:
 	docker-compose down -v

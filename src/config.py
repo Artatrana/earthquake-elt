@@ -6,17 +6,19 @@ import tomli
 from typing import Any, Dict
 from pathlib import Path
 
+
 # Load .env file
 def load_env():
     """Load environment variables from .env file."""
-    env_path = Path('.env')
+    env_path = Path(".env")
     if env_path.exists():
-        with open(env_path, 'r') as f:
+        with open(env_path, "r") as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith('#') and '=' in line:
-                    key, value = line.split('=', 1)
+                if line and not line.startswith("#") and "=" in line:
+                    key, value = line.split("=", 1)
                     os.environ[key.strip()] = value.strip()
+
 
 def load_config(config_path: str = "config/config.toml") -> Dict[str, Any]:
     """Load configuration from TOML file with environment variable substitution."""
@@ -24,10 +26,11 @@ def load_config(config_path: str = "config/config.toml") -> Dict[str, Any]:
     # Load .env first
     load_env()
 
-    with open(config_path, 'rb') as f:
+    with open(config_path, "rb") as f:
         config = tomli.load(f)
 
     return _substitute_env_vars(config)
+
 
 def _substitute_env_vars(obj: Any) -> Any:
     """Recursively substitute environment variables in config."""
