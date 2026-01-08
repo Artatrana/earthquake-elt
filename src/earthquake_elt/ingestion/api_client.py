@@ -101,9 +101,7 @@ class USGSAPIClient:
                     logger.info("No more events to fetch")
                     break
                 all_events.extend(features)
-                logger.info(
-                    f"Fetched {len(features)} events (total: {len(all_events)})"
-                )
+                logger.info(f"Fetched {len(features)} events (total: {len(all_events)})")
                 if max_results and len(all_events) >= max_results:
                     all_events = all_events[:max_results]
                     break

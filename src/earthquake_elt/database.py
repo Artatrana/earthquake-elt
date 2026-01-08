@@ -55,9 +55,7 @@ class Database:
                 cur.execute(sql)
         logger.info(f"Executed SQL file: {filepath}")
 
-    def bulk_insert(
-        self, table: str, records: List[Dict], page_size: int = 1000
-    ) -> int:
+    def bulk_insert(self, table: str, records: List[Dict], page_size: int = 1000) -> int:
         """Bulk insert records using execute_batch."""
         if not records:
             return 0

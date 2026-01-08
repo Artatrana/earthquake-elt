@@ -12,11 +12,11 @@ batch_size = 100
 lookback_days = 7
 
 [database]
-host = "localhost"
+host = "earthquake-db"
 port = 5432
 database = "earthquake_db"
 user = "postgres"
-password = "${DB_PASSWORD}"
+password = "postgres"
 pool_size = 5
 
 [ingestion]

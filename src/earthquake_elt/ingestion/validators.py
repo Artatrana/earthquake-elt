@@ -95,9 +95,7 @@ class DataValidator:
                 valid_events.append(event)
             else:
                 invalid_events.append((event, error_msg))
-                logger.warning(
-                    f"Invalid event {event.get('id', 'unknown')}: {error_msg}"
-                )
+                logger.warning(f"Invalid event {event.get('id', 'unknown')}: {error_msg}")
 
         logger.info(
             f"Validation: {len(valid_events)} valid, {len(invalid_events)} invalid"

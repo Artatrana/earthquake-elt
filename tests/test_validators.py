@@ -2,7 +2,7 @@
 # FILE: tests/test_validators.py
 # ============================================================================
 import pytest
-from src.ingestion.validators import DataValidator
+from earthquake_elt.ingestion import DataValidator
 
 
 @pytest.fixture

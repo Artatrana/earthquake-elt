@@ -1,0 +1,14 @@
+FROM apache/airflow:2.8.1-python3.10
+
+USER airflow
+
+# Copy project files
+COPY --chown=airflow:airflow pyproject.toml /opt/airflow/
+COPY --chown=airflow:airflow src /opt/airflow/src
+# Optional: include README if pyproject.toml requires it
+COPY --chown=airflow:airflow README.md /opt/airflow/
+# Copy SQL files
+COPY --chown=airflow:airflow sql /opt/airflow/sql
+
+# Install project in editable mode (optional)
+RUN pip install --no-cache-dir /opt/airflow

@@ -1,52 +1,72 @@
 # ============================================================================
 # FILE: Makefile
 # ============================================================================
-.PHONY: help setup run ingest transform test query clean
+.PHONY: help setup run test lint build airflow-build airflow-init airflow-up airflow-down clean
 
 help:
-	@echo "Earthquake ELT Pipeline Commands:"
-	@echo "  make setup      - Setup environment"
-	@echo "  make run        - Run full pipeline"
-	@echo "  make ingest     - Run ingestion only"
-	@echo "  make transform  - Run transformations only"
-	@echo "  make test       - Run tests"
-	@echo "  make query      - Run sample queries"
-	@echo "  make clean      - Clean up"
+	@echo "Available commands:"
+	@echo "  make setup            - Setup local dev environment"
+	@echo "  make run              - Run pipeline locally (no Docker)"
+	@echo "  make test             - Run tests"
+	@echo "  make lint             - Run ruff & black"
+	@echo "  make airflow-build    - Build Airflow Docker image"
+	@echo "  make airflow-init     - Initialize Airflow metadata DB"
+	@echo "  make airflow-up       - Start Airflow + Postgres"
+	@echo "  make airflow-down     - Stop Airflow stack"
+	@echo "  make clean            - Cleanup containers & volumes"
 
+# -----------------------------
+# Local Python (NO Airflow)
+# -----------------------------
 setup:
-	@echo "Setting up environment..."
+	@echo "Setting up virtual environment..."
 	pip install -r requirements.txt
-	mkdir -p logs
-	[ -f .env ] || cp .env.example .env
-
-	@echo "Starting Docker containers..."
-	docker compose up -d
-
-	@echo "Waiting for database..."
-	sleep 10
-
-	@echo "Initializing schema..."
-	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/01_raw_layer.sql
-	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/02_staging_layer.sql
-	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/schema/03_warehouse_layer.sql
-	@echo "✓ Setup complete!"
+	pip install -e .
 
 run:
+	@echo "Running pipeline locally (no Docker, no Airflow)..."
 	python run_pipeline.py
 
-ingest:
-	python run_pipeline.py --ingestion-only
-
-transform:
-	python run_pipeline.py --transform-only
-
 test:
-	pytest tests/ -v
+	pytest -v
+
+lint:
+	ruff check .
+	black --check .
+
+# -----------------------------
+# Airflow / Docker
+# -----------------------------
+airflow-build:
+	@echo "Building custom Airflow image..."
+	docker build -f Dockerfile.airflow -t earthquake-airflow:latest .
+
+airflow-init:
+	@echo "Initializing Airflow metadata database..."
+	docker compose up -d postgres
+	sleep 5
+	docker compose run --rm airflow-webserver airflow db init
+	docker compose run --rm airflow-webserver airflow users create \
+		--username admin \
+		--password admin \
+		--firstname Admin \
+		--lastname User \
+		--role Admin \
+		--email admin@example.com
+
+airflow-up: airflow-build
+	@echo "Starting Airflow stack..."
+	docker compose up -d
 
 query:
 	docker compose exec -T postgres psql -U postgres -d earthquake_db < sql/analytics/sample_queries.sql
 
+airflow-down:
+	docker compose down
+
+# -----------------------------
+# Cleanup
+# -----------------------------
 clean:
-	docker-compose down -v
-	rm -rf logs/*.log
-	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	docker compose down -v
+	docker system prune -f

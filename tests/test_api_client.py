@@ -3,7 +3,7 @@
 # ============================================================================
 import pytest
 from unittest.mock import patch
-from src.ingestion.api_client import USGSAPIClient
+from earthquake_elt.ingestion import USGSAPIClient
 
 
 @pytest.fixture

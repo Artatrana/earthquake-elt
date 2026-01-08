@@ -7,12 +7,12 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, Any
 import uuid
 
-from src.config import load_config
-from src.database import Database
-from src.ingestion.api_client import USGSAPIClient
-from src.ingestion.validators import DataValidator
-from src.ingestion.error_handler import ErrorHandler
-from src.ingestion.loader import RawDataLoader
+from earthquake_elt.config import load_config
+from earthquake_elt.database import Database
+from earthquake_elt.ingestion import USGSAPIClient
+from earthquake_elt.ingestion import DataValidator
+from earthquake_elt.ingestion import ErrorHandler
+from earthquake_elt.ingestion import RawDataLoader
 
 logging.basicConfig(
     level=logging.INFO,
@@ -146,6 +146,13 @@ class EarthquakePipeline:
             raise
         finally:
             self.db.close_pool()
+
+    def run(self):
+        """
+        Standard entry point for the pipeline.
+        Used by CLI, Docker, Airflow, and K8s.
+        """
+        return self.run_full_pipeline()
 
     def _get_layer_counts(self) -> Dict[str, int]:
         """Get record counts from each layer."""
